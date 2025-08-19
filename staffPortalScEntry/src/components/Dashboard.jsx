@@ -65,7 +65,7 @@ function Dashboard() {
               {showCourses && (
                 <ul className="nav flex-column ms-3 mt-2">
                   <li className="nav-item">
-                    <a href="#" className="nav-link text-white">CDAC Course</a>
+                    <a href="/course" className="nav-link text-white">CDAC Course</a>
                   </li>
                   <li className="nav-item">
                     <a href="#" className="nav-link text-white">Other Courses</a>
