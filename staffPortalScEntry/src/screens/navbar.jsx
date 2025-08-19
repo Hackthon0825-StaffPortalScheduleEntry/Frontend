@@ -6,7 +6,7 @@ import { FaUserCircle } from 'react-icons/fa';
 
 function Header() {
   return (
-    <Navbar bg="light" expand="lg" fixed="top">
+   <Navbar bg="light" variant="light" expand="lg" fixed="top">
       <Container>
         <Navbar.Brand href="#">Navbar</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
