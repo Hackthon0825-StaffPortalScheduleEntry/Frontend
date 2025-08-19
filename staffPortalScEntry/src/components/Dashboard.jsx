@@ -1,138 +1,130 @@
-import React from "react";
-import { Container, Row, Col, Card, Navbar, Nav } from "react-bootstrap";
-import { FaUsers, FaDollarSign, FaShoppingCart, FaBell, FaUserCircle } from "react-icons/fa";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+// src/components/Dashboard.jsx
+import React, { useState } from "react";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { format, parse, startOfWeek, getDay } from "date-fns";
+import enUS from "date-fns/locale/en-US";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-// Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+// Localization setup
+const locales = { "en-US": enUS };
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  getDay,
+  locales,
+});
+
+// Sample events
+const events = [
+  {
+    title: "Team Meeting",
+    start: new Date(2025, 7, 20, 10, 0),
+    end: new Date(2025, 7, 20, 12, 0),
+  },
+  {
+    title: "Workshop on React",
+    start: new Date(2025, 7, 22, 14, 0),
+    end: new Date(2025, 7, 22, 16, 0),
+  },
+];
 
 function Dashboard() {
-  const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-    datasets: [
-      {
-        label: "Visitors",
-        data: [120, 190, 300, 500, 200],
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: { position: "top" },
-      title: { display: true, text: "Analytics Overview" },
-    },
-  };
+  const [showCourses, setShowCourses] = useState(false); // toggle submenu
 
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
-      <div
-        className="bg-dark text-white p-3"
-        style={{ width: "250px", minHeight: "100vh" }}
-      >
-        <h4 className="mb-4">Arise Admin</h4>
-        <Nav className="flex-column">
-          <Nav.Link href="#" className="text-white">
-            Dashboard
-          </Nav.Link>
-          <Nav.Link href="#" className="text-white">
-            Users
-          </Nav.Link>
-          <Nav.Link href="#" className="text-white">
-            Analytics
-          </Nav.Link>
-          <Nav.Link href="#" className="text-white">
-            Settings
-          </Nav.Link>
-        </Nav>
-      </div>
+    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
+      {/* Top Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a className="navbar-brand" href="#">My Dashboard</a>
+        <div className="ms-auto">
+          <button className="btn btn-outline-light btn-sm me-2">🔔</button>
+          <button className="btn btn-outline-light btn-sm">Logout</button>
+        </div>
+      </nav>
 
-      {/* Content */}
-      <div className="flex-grow-1 p-3 bg-light">
-        <Navbar bg="dark" variant="dark" className="mb-4 rounded">
-          <Container fluid>
-            <Navbar.Brand>Dashboard</Navbar.Brand>
-            <Nav className="ms-auto">
-              <Nav.Link className="text-white">
-                <FaBell />
-              </Nav.Link>
-              <Nav.Link className="text-white">
-                <FaUserCircle />
-              </Nav.Link>
-            </Nav>
-          </Container>
-        </Navbar>
+      {/* Layout: Sidebar + Content */}
+      <div className="d-flex flex-grow-1">
+        {/* Sidebar */}
+        <div className="bg-dark text-white p-3" style={{ width: "220px" }}>
+          <h5 className="mb-4">📊 Menu</h5>
+          <ul className="nav flex-column">
+            <li className="nav-item mb-2">
+              <a href="#" className="nav-link text-white">Home</a>
+            </li>
 
-        <Container fluid>
-          <Row className="g-3">
-            <Col md={3}>
-              <Card bg="primary" text="white" className="shadow">
-                <Card.Body>
-                  <Card.Title>Users</Card.Title>
-                  <Card.Text className="fs-4">
-                    <FaUsers /> 1,250
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+            {/* Courses with Submenu */}
+            <li className="nav-item mb-2">
+              <button
+                className="btn btn-link text-white nav-link w-100 text-start p-0"
+                onClick={() => setShowCourses(!showCourses)}
+              >
+                Courses {showCourses ? "▲" : "▼"}
+              </button>
+              {showCourses && (
+                <ul className="nav flex-column ms-3 mt-2">
+                  <li className="nav-item">
+                    <a href="#" className="nav-link text-white">CDAC Course</a>
+                  </li>
+                  <li className="nav-item">
+                    <a href="#" className="nav-link text-white">Other Courses</a>
+                  </li>
+                </ul>
+              )}
+            </li>
 
-            <Col md={3}>
-              <Card bg="success" text="white" className="shadow">
-                <Card.Body>
-                  <Card.Title>Sales</Card.Title>
-                  <Card.Text className="fs-4">
-                    <FaDollarSign /> $9,540
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+            <li className="nav-item mb-2">
+              <a href="#" className="nav-link text-white">Reports</a>
+            </li>
+            <li className="nav-item mb-2">
+              <a href="#" className="nav-link text-white">Settings</a>
+            </li>
+          </ul>
+        </div>
 
-            <Col md={3}>
-              <Card bg="warning" text="white" className="shadow">
-                <Card.Body>
-                  <Card.Title>Orders</Card.Title>
-                  <Card.Text className="fs-4">
-                    <FaShoppingCart /> 350
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+        {/* Main Content */}
+        <div className="flex-grow-1 p-4">
+          {/* Statistics Row */}
+          <div className="row mb-4">
+            <div className="col-md-3">
+              <div className="card text-center shadow-sm p-3">
+                <h6>Total Courses</h6>
+                <h3>120</h3>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card text-center shadow-sm p-3">
+                <h6>Active Projects</h6>
+                <h3>18</h3>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card text-center shadow-sm p-3">
+                <h6>Pending Tasks</h6>
+                <h3>45</h3>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card text-center shadow-sm p-3">
+                <h6>Revenue</h6>
+                <h3>$12k</h3>
+              </div>
+            </div>
+          </div>
 
-            <Col md={3}>
-              <Card bg="danger" text="white" className="shadow">
-                <Card.Body>
-                  <Card.Title>Alerts</Card.Title>
-                  <Card.Text className="fs-4">
-                    <FaBell /> 5
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          <Card className="mt-4 shadow">
-            <Card.Body>
-              <Card.Title>Analytics</Card.Title>
-              <Line data={data} options={options} height={100} />
-            </Card.Body>
-          </Card>
-        </Container>
+          {/* Calendar Section */}
+          <div className="card shadow p-3">
+            <h5 className="mb-3">📅 Calendar</h5>
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 400 }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
