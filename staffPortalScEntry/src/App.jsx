@@ -1,33 +1,24 @@
-
-import { Route, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-
-import Footer from "./components/Footer";
-import CourseList from "./screens/Courses/CourseList";
-
+import React, { useState } from "react";
 import Header from "./screens/navbar";
+import Dashboard from "./components/Dashboard";
+import Login from "./screens/User/Login";
 
 
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
 
-
-function App()
-{
-  return(
-    
-    <>
-    <Routes>
-   
-
-    {/* <Dashboard/>
-
-    <Footer/>
-    <CourseList/> */}
-    <Route path="/course" element={<CourseList/>}></Route>
-      
-    </Routes>
-    
-
-    </>
+  return (
+    <div>
+      {loggedIn ? (
+        <>
+          <Header />
+          <Dashboard />
+          
+        </>
+      ) : (
+        <Login onLogin={() => setLoggedIn(true)} />
+      )}
+    </div>
   );
 }
 
